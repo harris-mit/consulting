@@ -158,7 +158,7 @@ const ConsultingWebsite = () => {
 
       {/* Expertise Section */}
       <div className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold mb-12 text-center">Expert Solutions in AI & Optimization</h2>
+        <h2 className="text-3xl font-bold mb-12 text-center">Expert Solutions in AI, Optimization, and Data Science</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="bg-white">
             <CardHeader>
