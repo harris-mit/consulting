@@ -4,53 +4,31 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
+const Logo = () => (
+  <div className="flex items-center gap-2">
+    <div className="bg-blue-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xl">
+      DSL
+    </div>
+    <span className="font-bold text-xl">Day St Labs</span>
+  </div>
+);
+
 const ContactForm = () => {
+  // ... ContactForm component code stays the same ...
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     company: '',
     message: ''
   });
-  const [status, setStatus] = useState('idle');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setStatus('loading');
-
-    try {
-      const response = await fetch('https://formsubmit.co/mitchell.harris@aya.yale.edu', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          company: formData.company,
-          message: formData.message,
-          _subject: "New Consulting Inquiry",
-        }),
-      });
-
-      if (response.ok) {
-        setStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          company: '',
-          message: ''
-        });
-        setTimeout(() => setStatus('idle'), 3000);
-      } else {
-        throw new Error('Failed to send message');
-      }
-    } catch (error) {
-      console.error('Failed to send message:', error);
-      setStatus('error');
-      setStatus('error');
-      setTimeout(() => setStatus('idle'), 3000);
-    }
+    const subject = encodeURIComponent('Consulting Inquiry from ' + formData.name);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nCompany: ${formData.company}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    );
+    window.location.href = `mailto:mitchell.harris@aya.yale.edu?subject=${subject}&body=${body}`;
   };
 
   const handleChange = (e) => {
@@ -70,7 +48,6 @@ const ContactForm = () => {
           onChange={handleChange}
           required
           className="w-full"
-          disabled={status === 'loading'}
         />
       </div>
       <div>
@@ -82,7 +59,6 @@ const ContactForm = () => {
           onChange={handleChange}
           required
           className="w-full"
-          disabled={status === 'loading'}
         />
       </div>
       <div>
@@ -92,7 +68,6 @@ const ContactForm = () => {
           value={formData.company}
           onChange={handleChange}
           className="w-full"
-          disabled={status === 'loading'}
         />
       </div>
       <div>
@@ -103,45 +78,46 @@ const ContactForm = () => {
           onChange={handleChange}
           required
           className="w-full h-32"
-          disabled={status === 'loading'}
         />
       </div>
       <button
         type="submit"
-        className={`w-full px-4 py-2 rounded-lg font-semibold transition-colors ${
-          status === 'loading' 
-            ? 'bg-gray-400 cursor-not-allowed'
-            : status === 'success'
-            ? 'bg-green-600 hover:bg-green-700 text-white'
-            : status === 'error'
-            ? 'bg-red-600 hover:bg-red-700 text-white'
-            : 'bg-blue-900 hover:bg-blue-800 text-white'
-        }`}
-        disabled={status === 'loading'}
+        className="w-full bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800"
       >
-        {status === 'loading' ? 'Sending...' :
-         status === 'success' ? 'Message Sent!' :
-         status === 'error' ? 'Error - Try Again' :
-         'Send Message'}
+        Send Message
       </button>
     </form>
   );
 };
-
-const Logo = () => (
-  <div className="flex items-center gap-2">
-    <div className="bg-blue-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xl">
-      DSL
-    </div>
-    <span className="font-bold text-xl">Day St Labs</span>
-  </div>
-);
 
 const ConsultingWebsite = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <Logo />
+            <Dialog open={isContactOpen} onOpenChange={setIsContactOpen}>
+              <DialogTrigger asChild>
+                <button className="bg-blue-900 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-800">
+                  Contact Us
+                </button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Contact Us</DialogTitle>
+                </DialogHeader>
+                <ContactForm />
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+      </nav>
+
+      {/* Rest of the component stays the same... */}
       {/* Hero Section */}
       <div className="bg-blue-900 text-white py-16">
         <div className="max-w-6xl mx-auto px-4">
@@ -167,7 +143,7 @@ const ConsultingWebsite = () => {
 
       {/* Expertise Section */}
       <div className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold mb-12 text-center">Expert Solutions in AI, Optimization, and Data Science</h2>
+        <h2 className="text-3xl font-bold mb-12 text-center">Expert Solutions in AI & Optimization</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="bg-white">
             <CardHeader>
