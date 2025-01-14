@@ -128,6 +128,15 @@ const ContactForm = () => {
   );
 };
 
+const Logo = () => (
+  <div className="flex items-center gap-2">
+    <div className="bg-blue-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xl">
+      DSL
+    </div>
+    <span className="font-bold text-xl">Day St Labs</span>
+  </div>
+);
+
 const ConsultingWebsite = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
 
