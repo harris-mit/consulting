@@ -13,81 +13,99 @@ const Logo = () => (
   </div>
 );
 
-const ContactForm = () => {
-  // ... ContactForm component code stays the same ...
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    message: ''
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const subject = encodeURIComponent('Consulting Inquiry from ' + formData.name);
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\nCompany: ${formData.company}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    );
-    window.location.href = `mailto:mitchell.harris@aya.yale.edu?subject=${subject}&body=${body}`;
-  };
-
-  const handleChange = (e) => {
+f (response.ok) {
+    setStatus('success');
     setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+	name: '',
+	email: '',
+	company: '',
+	message: ''
     });
-  };
+    setTimeout(() => setStatus('idle'), 3000);
+} else {
+    throw new Error('Failed to send message');
+}
+} catch (error) {
+    console.error('Failed to send message:', error);
+    setStatus('error');
+    setStatus('error');
+    setTimeout(() => setStatus('idle'), 3000);
+}
+};
 
-  return (
+const handleChange = (e) => {
+    setFormData({
+	...formData,
+	[e.target.name]: e.target.value
+    });
+};
+
+return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <Input
-          placeholder="Your Name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className="w-full"
-        />
+	<Input
+	  placeholder="Your Name"
+	  name="name"
+	  value={formData.name}
+	  onChange={handleChange}
+	  required
+	  className="w-full"
+	  disabled={status === 'loading'}
+	  />
       </div>
       <div>
-        <Input
-          placeholder="Your Email"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="w-full"
-        />
+	<Input
+	  placeholder="Your Email"
+	  name="email"
+	  type="email"
+	  value={formData.email}
+	  onChange={handleChange}
+	  required
+	  className="w-full"
+	  disabled={status === 'loading'}
+	  />
       </div>
       <div>
-        <Input
-          placeholder="Company"
-          name="company"
-          value={formData.company}
-          onChange={handleChange}
-          className="w-full"
-        />
+	<Input
+	  placeholder="Company"
+	  name="company"
+	  value={formData.company}
+	  onChange={handleChange}
+	  className="w-full"
+	  disabled={status === 'loading'}
+	  />
       </div>
       <div>
-        <Textarea
-          placeholder="Tell us about your project"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          required
-          className="w-full h-32"
-        />
+	<Textarea
+	  placeholder="Tell us about your project"
+	  name="message"
+	  value={formData.message}
+	  onChange={handleChange}
+	  required
+	  className="w-full h-32"
+	  disabled={status === 'loading'}
+	  />
       </div>
       <button
-        type="submit"
-        className="w-full bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800"
-      >
-        Send Message
+	type="submit"
+	className={`w-full px-4 py-2 rounded-lg font-semibold transition-colors ${
+          status === 'loading' 
+            ? 'bg-gray-400 cursor-not-allowed'
+            : status === 'success'
+            ? 'bg-green-600 hover:bg-green-700 text-white'
+            : status === 'error'
+            ? 'bg-red-600 hover:bg-red-700 text-white'
+            : 'bg-blue-900 hover:bg-blue-800 text-white'
+        }`}
+	disabled={status === 'loading'}
+	>
+	{status === 'loading' ? 'Sending...' :
+	    status === 'success' ? 'Message Sent!' :
+	    status === 'error' ? 'Error - Try Again' :
+	'Send Message'}
       </button>
     </form>
-  );
+);
 };
 
 const ConsultingWebsite = () => {
@@ -143,7 +161,7 @@ const ConsultingWebsite = () => {
 
       {/* Expertise Section */}
       <div className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold mb-12 text-center">Expert Solutions in AI & Optimization</h2>
+        <h2 className="text-3xl font-bold mb-12 text-center">Expert Solutions in AI, Optimization, and Data Science</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="bg-white">
             <CardHeader>
