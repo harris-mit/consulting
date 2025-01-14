@@ -12,8 +12,35 @@ const Logo = () => (
     <span className="font-bold text-xl">Day St Labs</span>
   </div>
 );
+const ContactForm = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    message: ''
+  });
+  const [status, setStatus] = useState('idle');
 
-f (response.ok) {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('loading');
+
+    try {
+      const response = await fetch('https://formsubmit.co/mitchell.harris@aya.yale.edu', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          message: formData.message,
+          _subject: "New Consulting Inquiry",
+        }),
+      });
+if (response.ok) {
     setStatus('success');
     setFormData({
 	name: '',
